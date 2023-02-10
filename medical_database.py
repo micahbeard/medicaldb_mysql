@@ -87,7 +87,7 @@ def edit_pat():
                 edit_loop = False
         
         elif edit_select == "3":
-            LastName = input("Change Sex: ")
+            Sex = input("Change Sex: ")
             update_pat = ("UPDATE patient SET Sex = %s WHERE ID = %s")
             update_pat_var = (Sex, lookup_name)
             print(update_pat, update_pat_var)
@@ -98,7 +98,7 @@ def edit_pat():
                 pat_error()
                 edit_loop = False
         elif edit_select == "4":            
-            LastName = input("Change Height: ")
+            Height = input("Change Height: ")
             update_pat = ("UPDATE patient SET Height = %s WHERE ID = %s")
             update_pat_var = (Height, lookup_name)
             print(update_pat, update_pat_var)
@@ -109,7 +109,7 @@ def edit_pat():
                 pat_error()
                 edit_loop = False
         elif edit_select == "5":
-            LastName = input("Change Weight: ")
+            Weight = input("Change Weight: ")
             update_pat = ("UPDATE patient SET Weight = %s WHERE ID = %s")
             update_pat_var = (Weight, lookup_name)
             print(update_pat, update_pat_var)
@@ -120,7 +120,7 @@ def edit_pat():
                 pat_error()
                 edit_loop = False
         elif edit_select == "6":
-            LastName = input("Update COVID Result: ")
+            Result = input("Update COVID Result: ")
             update_pat = ("UPDATE patient SET Result = %s WHERE ID = %s")
             update_pat_var = (Result, lookup_name)
             print(update_pat, update_pat_var)
@@ -133,8 +133,23 @@ def edit_pat():
         else:
             edit_loop = False
 
-   
-
+def del_pat():
+    print("Which Patient would you like to delete?")
+    delete_row_id = input("Patient's ID: ")
+    pat_lookup = "SELECT * FROM patient WHERE ID="+delete_row_id
+    
+    db_cursor.execute(pat_lookup)
+    for x in db_cursor:
+        ID, FirstName, LastName, Sex, Height, Weight, Result = x
+        print("Patient's ID: ", ID,"\nPatient's First Name: ", FirstName,"\nPatient's Last Name: ", LastName,"\nPatient's Sex: ", Sex,"\nPatient's Height: ", Height,"\nPatient's Weight: ", Weight,"\nPatient's COVID Result: ", Result)
+        
+    confirm = input("Are you sure? Yes/No ")
+    if confirm == "yes":
+        print("Deleting...")
+        db_cursor.execute("DELETE FROM patient WHERE ID = "+delete_row_id)
+        db.commit()
+    elif confirm == "no":
+        print("====Canceling====")
 # Welcome Message
 print("Welcome to the Medical Database")
 auth = True
@@ -145,7 +160,7 @@ while auth:
     
     # Menu Selector
     print("=====================")
-    print("1: Add New Resultn\n2: Search the Database\n3: Edit Patient\n4: Exit Program")
+    print("1: Add New Result\n2: Search the Database\n3: Edit Patient\n4: Delete Patient \n5: Exit Program")
     print("=====================")
     action = input("What do you want to do? ")
     
@@ -162,8 +177,11 @@ while auth:
     elif action == "3":
         edit_pat()
  
-     # Exit Program
     elif action == "4":
+        del_pat()
+     
+     # Exit Program
+    elif action == "5":
         print("Thank you! Come again soon,",username)
         print("=====================")
         auth = False
